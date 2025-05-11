@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E-commerce Product Viewer</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container py-4">
+    <h2 class="text-center mb-4"> Aspa Product Dashboard</h2>
+
+    <!-- Dynamic Carousel -->
+    <div class="mb-4">
+      <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" id="carousel-inner"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Buttons to fetch data -->
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-3">
+      <button class="btn btn-primary" onclick="getAllData()">Get All Products</button>
+      <button class="btn btn-success" onclick="getDataByCategory('smartphones')">Smartphones</button>
+      <button class="btn btn-info" onclick="getDataByCategory('laptops')">Laptops</button>
+      <button class="btn btn-warning" onclick="getDataByPrice(500)">Price ≤ 500</button>
+    </div>
+
+    <!-- Product cards -->
+    <div id="product-container" class="row g-3"></div>
+
+    <!-- Pagination -->
+    <nav class="mt-4">
+      <ul class="pagination justify-content-center" id="pagination"></ul>
+    </nav>
+  </div>
+
+  <!-- Bootstrap JS and your custom JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
