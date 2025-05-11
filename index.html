@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>E-Commerce Product Viewer</title>
+  <title>My E-Commerce App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
   <div class="container py-4">
-    <h2 class="text-center mb-4">🛍️ Product Viewer</h2>
+    <h1 class="text-center mb-4">🛒 E-Commerce Products</h1>
 
-    <!-- Carousel -->
-    <div id="productCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+    <!-- Carousel Section -->
+    <div id="productCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
       <div class="carousel-inner" id="carouselContainer"></div>
       <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
@@ -22,14 +23,14 @@
       </button>
     </div>
 
-    <!-- Filter Controls -->
-    <div class="row mb-3 g-2 justify-content-center">
+    <!-- Controls -->
+    <div class="row mb-4 g-2">
       <div class="col-md-4">
-        <input type="text" class="form-control" id="searchInput" placeholder="Search by name..." oninput="searchProducts()">
+        <input type="text" class="form-control" id="searchInput" placeholder="Search products..." oninput="searchProducts()">
       </div>
       <div class="col-md-3">
-        <select class="form-select" onchange="getDataByCategory(this.value)">
-          <option value="">Filter by Category</option>
+        <select class="form-select" onchange="filterByCategory(this.value)">
+          <option value="">All Categories</option>
           <option value="smartphones">Smartphones</option>
           <option value="laptops">Laptops</option>
           <option value="fragrances">Fragrances</option>
@@ -37,25 +38,25 @@
         </select>
       </div>
       <div class="col-md-2">
-        <button class="btn btn-outline-primary w-100" onclick="getDataByPrice(500)">Price ≤ ₹500</button>
+        <button class="btn btn-outline-primary w-100" onclick="filterByPrice(500)">Price ≤ ₹500</button>
       </div>
-      <div class="col-md-2">
-        <button class="btn btn-outline-dark w-100" onclick="getAllData()">Reset</button>
+      <div class="col-md-3">
+        <button class="btn btn-outline-secondary w-100" onclick="getAllProducts()">Reset Filters</button>
       </div>
     </div>
 
     <!-- Product Cards -->
-    <div id="productContainer" class="row g-4"></div>
+    <div class="row" id="productGrid"></div>
 
     <!-- Pagination -->
     <nav class="mt-4">
-      <ul class="pagination justify-content-center" id="paginationContainer"></ul>
+      <ul class="pagination justify-content-center" id="pagination"></ul>
     </nav>
   </div>
 
-  <!-- Bootstrap JS -->
+  <!-- Bootstrap Bundle JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- App JS -->
+  <!-- App Script -->
   <script src="app.js"></script>
 </body>
 </html>

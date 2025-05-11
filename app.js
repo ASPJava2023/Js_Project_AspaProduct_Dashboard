@@ -4,35 +4,36 @@ let filteredProducts = [];
 let currentPage = 1;
 const itemsPerPage = 6;
 
-// Load everything on startup
+// Fetch and load everything on page load
 window.onload = async () => {
   await loadCarousel();
-  await getAllData();
+  await getAllProducts();
 };
 
-// Load Carousel with top 5 products
+// Load Bootstrap carousel with top 5 products
 async function loadCarousel() {
   const res = await fetch(API_URL);
   const data = await res.json();
-  const carousel = document.getElementById('carouselContainer');
-  carousel.innerHTML = '';
+  const carouselContainer = document.getElementById("carouselContainer");
+  carouselContainer.innerHTML = "";
 
-  data.products.slice(0, 5).forEach((product, index) => {
-    const div = document.createElement('div');
-    div.className = `carousel-item ${index === 0 ? 'active' : ''}`;
-    div.innerHTML = `
-      <img src="${product.thumbnail}" class="d-block w-100" style="height:300px; object-fit:cover;" alt="${product.title}">
-      <div class="carousel-caption bg-dark bg-opacity-50 p-2 rounded">
+  const topProducts = data.products.slice(0, 5);
+  topProducts.forEach((product, index) => {
+    const item = document.createElement("div");
+    item.className = `carousel-item ${index === 0 ? "active" : ""}`;
+    item.innerHTML = `
+      <img src="${product.thumbnail}" class="d-block w-100" style="height:300px; object-fit:cover;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 p-2 rounded">
         <h5>${product.title}</h5>
         <p>₹${product.price}</p>
       </div>
     `;
-    carousel.appendChild(div);
+    carouselContainer.appendChild(item);
   });
 }
 
-// Fetch all product data
-async function getAllData() {
+// Fetch all products
+async function getAllProducts() {
   const res = await fetch(API_URL);
   const data = await res.json();
   allProducts = data.products;
@@ -42,81 +43,72 @@ async function getAllData() {
 }
 
 // Filter by category
-async function getDataByCategory(category) {
-  if (!category) return getAllData();
-  const res = await fetch(`${API_URL}/category/${category}`);
-  const data = await res.json();
-  filteredProducts = data.products;
+function filterByCategory(category) {
+  if (!category) return getAllProducts();
+  filteredProducts = allProducts.filter(p => p.category === category);
   currentPage = 1;
   renderProducts();
 }
 
-// Filter by max price
-async function getDataByPrice(maxPrice) {
-  const res = await fetch(API_URL);
-  const data = await res.json();
-  filteredProducts = data.products.filter(p => p.price <= maxPrice);
+// Filter by price
+function filterByPrice(maxPrice) {
+  filteredProducts = allProducts.filter(p => p.price <= maxPrice);
   currentPage = 1;
   renderProducts();
 }
 
-// Search by product name or description
+// Search by title or description
 function searchProducts() {
-  const query = document.getElementById('searchInput').value.toLowerCase();
-  filteredProducts = allProducts.filter(p =>
-    p.title.toLowerCase().includes(query) ||
-    p.description.toLowerCase().includes(query)
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  filteredProducts = allProducts.filter(
+    p =>
+      p.title.toLowerCase().includes(search) ||
+      p.description.toLowerCase().includes(search)
   );
   currentPage = 1;
   renderProducts();
 }
 
-// Render products into cards
+// Render product cards and pagination
 function renderProducts() {
-  const container = document.getElementById('productContainer');
-  container.innerHTML = "";
+  const grid = document.getElementById("productGrid");
+  const pagination = document.getElementById("pagination");
+  grid.innerHTML = "";
+  pagination.innerHTML = "";
 
   const start = (currentPage - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  const paginated = filteredProducts.slice(start, end);
+  const pageItems = filteredProducts.slice(start, end);
 
-  if (paginated.length === 0) {
-    container.innerHTML = `<p class="text-center text-muted">No products found.</p>`;
-    renderPagination();
+  // Render cards
+  if (pageItems.length === 0) {
+    grid.innerHTML = `<p class="text-center text-muted">No products found.</p>`;
     return;
   }
 
-  paginated.forEach(product => {
-    const col = document.createElement('div');
-    col.className = "col-md-4";
+  pageItems.forEach(product => {
+    const col = document.createElement("div");
+    col.className = "col-md-4 mb-4";
     col.innerHTML = `
       <div class="card h-100 shadow-sm">
-        <img src="${product.thumbnail}" class="card-img-top" style="height:200px; object-fit:cover;" alt="${product.title}">
+        <img src="${product.thumbnail}" class="card-img-top" style="height:200px; object-fit:cover;">
         <div class="card-body">
           <h5 class="card-title">${product.title}</h5>
-          <p class="card-text">${product.description.slice(0, 60)}...</p>
-          <p class="text-muted">${product.category}</p>
-          <p><strong>₹${product.price}</strong></p>
+          <p class="card-text text-muted">${product.description.slice(0, 60)}...</p>
+          <p class="fw-bold text-primary">₹${product.price}</p>
         </div>
       </div>
     `;
-    container.appendChild(col);
+    grid.appendChild(col);
   });
 
-  renderPagination();
-}
-
-// Render pagination buttons
-function renderPagination() {
-  const pagination = document.getElementById('paginationContainer');
-  pagination.innerHTML = "";
+  // Render pagination
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-
   for (let i = 1; i <= totalPages; i++) {
-    const li = document.createElement('li');
+    const li = document.createElement("li");
     li.className = `page-item ${i === currentPage ? "active" : ""}`;
-    li.innerHTML = `<a href="#" class="page-link">${i}</a>`;
-    li.addEventListener('click', e => {
+    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+    li.addEventListener("click", (e) => {
       e.preventDefault();
       currentPage = i;
       renderProducts();
